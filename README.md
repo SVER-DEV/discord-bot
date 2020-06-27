@@ -4,7 +4,7 @@
 
 초보로써 완성되지 않은 코드이므로 참고만 해주셨으면 합니다 :D 중학생의 첫 짜집기 코드개념으로 만들어진 봇입니다! 잘 써주세요
 
-<u></u>
+<!---->
 
 명령어
 
@@ -64,9 +64,7 @@ FPP(1인칭)의 배틀그라운드 일반 스쿼드 전적을 보여드립니다
 
 롤의 플레이어 정보(전적)을 보여드립니다
 
-<u></u>
+<!---->
 
-Thanks for [J-hoplin1](https://github.com/J-hoplin1) and 
-
-[Goblin Slayer]: https://blue-coding.tistory.com/
+Thanks for [J-hoplin1](https://github.com/J-hoplin1) and [Goblin Slayer](https://blue-coding.tistory.com)
 
