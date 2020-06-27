@@ -42,7 +42,7 @@ for ind in tqdm(range(0,len(operatorListDiv))):
     operatoriconURLDict[operatorname] = operatoriconURL
 
 
-token = 'NzIxOTg5MjM0NDk1MzI0MjUw.Xu7Wfg.UzmxJdCM9qBwo7tgKi928_rvbSI'
+token = 'your-token'
 
 # for lolplayersearch
 tierScore = {
