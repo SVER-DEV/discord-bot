@@ -176,6 +176,44 @@ async def on_message(message): # on_message() event : when the bot has recieved 
 
     if message.content.startswith("!도움말"):
         await message.channel.send("봇의 도움말입니다 '~' 잘 부탁드려요!")
+        
+    if message.content.startswith("!help"):
+        channel = message.channel
+        embed = discord.Embed(
+            title = '도움말',
+            description = '각각의 명령어들 입니다. 본 명령어를 치시면 항상 보실수 있어요 :ㅇ',
+            colour = discord.Colour.blue()
+        )
+
+        #embed.set_footer(text = '끗')
+        dtime = datetime.datetime.now()
+        #print(dtime[0:4]) # 년도
+        #print(dtime[5:7]) #월
+        #print(dtime[8:11])#일
+        #print(dtime[11:13])#시
+        #print(dtime[14:16])#분
+        #print(dtime[17:19])#초
+        embed.set_footer(text=str(dtime.year)+"년 "+str(dtime.month)+"월 "+str(dtime.day)+"일 "+str(dtime.hour)+"시 "+str(dtime.minute)+"분 "+str(dtime.second)+"초")
+        #embed.set_footer(text=dtime[0:4]+"년 "+dtime[5:7]+"월 "+dtime[8:11]+"일 "+dtime[11:13]+"시 "+dtime[14:16]+"분 "+dtime[17:19]+"초")
+        embed.add_field(name='!도움말 / !help', value='본 내용을 보여드립니다', inline=False)
+        embed.add_field(name='!ㅎㅇ / !안녕', value='인사를 해드립니다 :D', inline=False)
+        embed.add_field(name='!주사위', value='1부터 6사이의 숫자가 랜덤으로 나옵니다', inline=False)
+        embed.add_field(name='!배그경쟁1 (닉네임)', value='TPP(3인칭)의 배틀그라운드 경쟁 전적을 보여드립니다', inline=False)
+        embed.add_field(name='!배그경쟁2 (닉네임)', value='FPP(1인칭)의 배틀그라운드 일반 전적을 보여드립니다', inline=False)
+        embed.add_field(name='!배그솔로1 (닉네임)', value='TPP(3인칭)의 배틀그라운드 일반 전적을 보여드립니다', inline=False)
+        embed.add_field(name='!배그솔로2 (닉네임)', value='FPP(1인칭)의 배틀그라운드 일반 전적을 보여드립니다', inline=False)
+        embed.add_field(name='!배그듀오1 (닉네임)', value='TPP(3인칭)의 배틀그라운드 일반 듀오 전적을 보여드립니다', inline=False)
+        embed.add_field(name='!배그듀오2 (닉네임)', value='FPP(1인칭)의 배틀그라운드 일반 듀오 전적을 보여드립니다', inline=False)
+        embed.add_field(name='!배그스쿼드1 (닉네임)', value='TPP(3인칭)의 배틀그라운드 일반 스쿼드 전적을 보여드립니다', inline=False)
+        embed.add_field(name='!배그스쿼드2 (닉네임)', value='FPP(1인칭)의 배틀그라운드 일반 스쿼드 전적을 보여드립니다', inline=False)
+        embed.add_field(name='!레식전적 (닉네임)', value='레인보우식스 시즈의 랭크 정보와 레벨, 티어등을 보여드립니다', inline=False)
+        embed.add_field(name='!레식오퍼 (닉네임)', value='레인보우식스 시즈의 오퍼레이터 정보(킬 ,데스,승률,가장 많이 플레이한 오퍼 순위)를 보여드립니다', inline=False)
+        embed.add_field(name='!롤전적 (닉네임)', value='롤의 플레이어 정보(전적)을 보여드립니다', inline=False)
+
+        await message.channel.send(embed=embed)
+
+    if message.content.startswith("!help"):
+        await message.channel.send("봇의 도움말입니다 '~' 잘 부탁드려요!")
 
     if message.content.startswith('!주사위'):
 
