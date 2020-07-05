@@ -1,15 +1,16 @@
 import discord
 import asyncio
 import os
-from discord.ext import commands
+from discord.ext import commands, tasks
 import urllib
+import datetime
 from urllib.request import URLError
 from urllib.request import HTTPError
 from urllib.request import urlopen
-from urllib.request import Request, urlopen
+from urllib.request import  Request, urlopen
 from bs4 import BeautifulSoup
 from urllib.parse import quote
-import re # Regex for youtube link
+import re  # Regex for youtube link
 import warnings
 import requests
 import unicodedata
@@ -17,10 +18,16 @@ from tqdm import tqdm
 import json
 import time
 import random
-import datetime
+from datetime import datetime as dt
+from itertools import cycle
 
 operatoriconURLDict = dict()
 client = discord.Client()
+
+red = discord.Color.red()
+green = discord.Color.green()
+yellow = discord.Color.gold()
+blue = discord.Color.blue()
 
 # Scrape Rainbow Six Siege's Operator's icon before start
 unisoftURL = "https://www.ubisoft.com"
@@ -85,6 +92,22 @@ loop.run_until_complete(print_add(1,2))
 loop.close()
 '''
 
+async def catchError(message, error):
+    errorCh = client.get_user(278441794633465876)
+
+    embed = discord.Embed(title="오류 발생!", description="기능을 실행하는 동안 오류가 발생하였습니다.", color=red, timestamp=dt.utcnow())
+    if message != None: embed.add_field(name="실행 중이던 명령어:", value=message.content)
+    if error != None:
+        error = str(error).replace("`", "")
+        embed.add_field(name="오류 내용:", value=f"```\n{error}\n```")
+    await errorCh.send(embed=embed)
+
+    if message != None:
+        embed = discord.Embed(title="오류 발생!",
+                              description="명령어를 실행하는 동안 오류가 발생하였습니다.\n조금 뒤에 다시 시도해 주세요.\n오류가 지속된다면, 저에게 DM으로 지원 메시지를 보내주시길 바랍니다.",
+                              color=red, timestamp=dt.utcnow())
+        await message.channel.send(embed=embed)
+
 def tierCompare(solorank,flexrank):
     if tierScore[solorank] > tierScore[flexrank]:
         return 0
@@ -131,13 +154,67 @@ async def on_message(message): # on_message() event : when the bot has recieved 
         await message.channel.send("안녕하세요 :D")
     if message.content.startswith("!안녕"):
         await message.channel.send("안녕하세요 :ㅇ")
-    if message.content.startswith("!핑"):
-        await message.channel.send("퐁")
         #To user who sent message
     # await message.author.send(msg)
     print(message.content)
     if message.author == client.user:
         return
+
+    command = message.content[1:].split()[0]
+    commandLine = []
+    if len(message.content.split()) > 1: commandLine = message.content.split()[1:]
+
+    if message.content.startswith("!핑"):
+        msg = await message.channel.send(embed=discord.Embed(title=":ping_pong: 퐁!",
+                                                             description=f"현재 코로나 봇은 ``{int(client.latency * 1000)}ms``의 지연시간을 가지고 있습니다.",
+                                                             color=blue, timestamp=datetime.datetime.utcnow()))
+        ping = int((datetime.datetime.utcnow() - msg.created_at).total_seconds() * 1000)
+        await msg.edit(embed=discord.Embed(title=":ping_pong: 퐁!",
+                                           description=f"현재 코로나 봇은 ``{int(client.latency * 1000)}ms``의 지연시간을 가지고 있습니다.\n저와 {message.author.display_name}님이 닿기까지는 ``{ping}ms``가 걸렸습니다.",
+                                           color=blue, timestamp=datetime.datetime.utcnow()))
+
+    if message.content.startswith("!마스크판매"):
+        if len(commandLine) < 1:
+            await message.channel.send(
+                embed=discord.Embed(title="사용법", description="```*마스크판매 (주소)```\n'서울특별시'와 같이 시 단위만 입력하는 것은 불가능합니다.",
+                                    color=blue, timestamp=datetime.datetime.utcnow()))
+        else:
+            if len(commandLine) == 1:
+                await message.channel.send(content=":no_entry: '서울특별시'와 같이 시 단위만 입력하는 것은 불가능합니다.")
+                return
+            addr = " ".join(commandLine)
+
+            try:
+                req = requests.get(
+                    f"https://8oi9s0nnth.apigw.ntruss.com/corona19-masks/v1/storesByAddr/json?address={addr}")
+            except Exception as error:
+                await catchError(message, error)
+            else:
+                if req.status_code != 200:
+                    await catchError(message, "상태 코드 오류")
+                else:
+                    res = req.json()
+                    count = res["count"]
+                    if count < 1:
+                        await message.channel.send(content=":no_entry: 주소가 잘못되었습니다.")
+                        return
+                    embed = discord.Embed(title="공적 마스크 판매 현황",
+                                          description=f"``{addr}``에 있는 마스크를 100개 이상 보유 중인 약국들의 마스크 판매 현황을 불러왔습니다.",
+                                          color=blue, timestamp=datetime.datetime.utcnow())
+                    number = 0
+                    for s in res["stores"]:
+                        if "remain_stat" in s:
+                            remain = s["remain_stat"]
+                            if remain == "plenty":
+                                embed.add_field(name=s["name"], value=s["addr"])
+                                number += 1
+                    if number > 25:
+                        embed.set_footer(text="25개 초과의 결과는 25개까지만 보여줍니다.")
+                    elif number < 1:
+                        embed = discord.Embed(title="찾을 수 없음",
+                                              description=f"``{addr}``에 있는 마스크를 100개 이상 보유 중인 약국들을 찾을 수 없습니다.",
+                                              color=red, timestamp=datetime.datetime.utcnow())
+                    await message.channel.send(embed=embed)
 
     if message.content.startswith("!도움말"):
         channel = message.channel
@@ -171,12 +248,14 @@ async def on_message(message): # on_message() event : when the bot has recieved 
         embed.add_field(name='!레식전적 (닉네임)', value='레인보우식스 시즈의 랭크 정보와 레벨, 티어등을 보여드립니다', inline=False)
         embed.add_field(name='!레식오퍼 (닉네임)', value='레인보우식스 시즈의 오퍼레이터 정보(킬 ,데스,승률,가장 많이 플레이한 오퍼 순위)를 보여드립니다', inline=False)
         embed.add_field(name='!롤전적 (닉네임)', value='롤의 플레이어 정보(전적)을 보여드립니다', inline=False)
+        embed.add_field(name='!핑', value='봇의 핑 정보를 보여드립니다.', inline=False)
+        embed.add_field(name='!마스크판매 (지역명)', value='마스크를 100개 이상 보유중인 약국들의 마스크 판매 현황을 보여드립니다.', inline=False)
 
         await message.channel.send(embed=embed)
 
     if message.content.startswith("!도움말"):
         await message.channel.send("봇의 도움말입니다 '~' 잘 부탁드려요!")
-        
+
     if message.content.startswith("!help"):
         channel = message.channel
         embed = discord.Embed(
