@@ -69,5 +69,5 @@ FPP(1인칭)의 배틀그라운드 일반 스쿼드 전적을 보여드립니다
 
 ***
 
-Thanks for [J-hoplin1](https://jhoplin7259.tistory.com/) and [Goblin Slayer](https://blue-coding.tistory.com)
+Thanks for [J-hoplin1](https://jhoplin7259.tistory.com/) and [Goblin Slayer](https://blue-coding.tistory.com), [XxPKBxX](https://github.com/XxPKBxX)
 
