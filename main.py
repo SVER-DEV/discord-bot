@@ -68,8 +68,6 @@ tierScore = {
 warnings.filterwarnings(action='ignore')
 
 opggsummonersearch = 'https://www.op.gg/summoner/userName='
-bottoken = 'NzIyNDMzOTIxNzUyNDk4MjI2.XujOhQ.LBprUFMCKmUF9ByYgFMqWrIK-3Y'
-
 
 #r6stats 서버에서 크롤링을 막은듯하다
 r6URL = "https://r6stats.com"
@@ -132,7 +130,7 @@ def deleteTags(htmls):
 
 @client.event # Use these decorator to register an event.
 async def on_ready(): # on_ready() event : when the bot has finised logging in and setting things up
-    await client.change_presence(status=discord.Status.online, activity=discord.Game("Type !help or !도움말 for help"))
+    await client.change_presence(status=discord.Status.online, activity=discord.Game("!help 혹은 !도움말 로 도움을 받으실 수 있습니다!"))
     print("New log in as {0.user}".format(client))
 
 @client.event
@@ -142,11 +140,6 @@ async def on_message(message): # on_message() event : when the bot has recieved 
     print(message.content)
     if message.author == client.user:
         return
-
-@client.event # Use these decorator to register an event.
-async def on_ready(): # on_ready() event : when the bot has finised logging in and setting things up
-    await client.change_presence(status=discord.Status.online, activity=discord.Game(""))
-    print("New log in as {0.user}".format(client))
 
 @client.event
 async def on_message(message): # on_message() event : when the bot has recieved a message
@@ -166,11 +159,11 @@ async def on_message(message): # on_message() event : when the bot has recieved 
 
     if message.content.startswith("!핑"):
         msg = await message.channel.send(embed=discord.Embed(title=":ping_pong: 퐁!",
-                                                             description=f"현재 코로나 봇은 ``{int(client.latency * 1000)}ms``의 지연시간을 가지고 있습니다.",
+                                                             description=f"현재 WH3N_BOT 은 ``{int(client.latency * 1000)}ms``의 지연시간을 가지고 있습니다.",
                                                              color=blue, timestamp=datetime.datetime.utcnow()))
         ping = int((datetime.datetime.utcnow() - msg.created_at).total_seconds() * 1000)
         await msg.edit(embed=discord.Embed(title=":ping_pong: 퐁!",
-                                           description=f"현재 코로나 봇은 ``{int(client.latency * 1000)}ms``의 지연시간을 가지고 있습니다.\n저와 {message.author.display_name}님이 닿기까지는 ``{ping}ms``가 걸렸습니다.",
+                                           description=f"현재 WH3N_BOT 은 ``{int(client.latency * 1000)}ms``의 지연시간을 가지고 있습니다.\n저와 {message.author.display_name}님이 닿기까지는 ``{ping}ms``가 걸렸습니다.",
                                            color=blue, timestamp=datetime.datetime.utcnow()))
 
     if message.content.startswith("!마스크판매"):
@@ -220,7 +213,7 @@ async def on_message(message): # on_message() event : when the bot has recieved 
         channel = message.channel
         embed = discord.Embed(
             title = '도움말',
-            description = '각각의 명령어들 입니다. 본 명령어를 치시면 항상 보실수 있어요 :ㅇ',
+            description = '각각의 명령어들 입니다. 본 명령어를 치시면 항상 보실수 있어요 :ㅇ  (닉네임에 뛰어쓰기가 있으시면 -로 구분하시면 됩니다.)',
             colour = discord.Colour.blue()
         )
 
@@ -260,7 +253,7 @@ async def on_message(message): # on_message() event : when the bot has recieved 
         channel = message.channel
         embed = discord.Embed(
             title = '도움말',
-            description = '각각의 명령어들 입니다. 본 명령어를 치시면 항상 보실수 있어요 :ㅇ',
+            description = '각각의 명령어들 입니다. 본 명령어를 치시면 항상 보실수 있어요 :ㅇ  (닉네임에 뛰어쓰기가 있으시다면 -로 구분하시면 됩니다!)',
             colour = discord.Colour.blue()
         )
 
@@ -288,7 +281,8 @@ async def on_message(message): # on_message() event : when the bot has recieved 
         embed.add_field(name='!레식전적 (닉네임)', value='레인보우식스 시즈의 랭크 정보와 레벨, 티어등을 보여드립니다', inline=False)
         embed.add_field(name='!레식오퍼 (닉네임)', value='레인보우식스 시즈의 오퍼레이터 정보(킬 ,데스,승률,가장 많이 플레이한 오퍼 순위)를 보여드립니다', inline=False)
         embed.add_field(name='!롤전적 (닉네임)', value='롤의 플레이어 정보(전적)을 보여드립니다', inline=False)
-
+        embed.add_field(name='!마스크판매 (지역명)', value='마스크를 100개 이상 보유중인 약국들의 마스크 판매 현황을 보여드립니다.', inline=False)
+        
         await message.channel.send(embed=embed)
 
     if message.content.startswith("!help"):
