@@ -54,11 +54,11 @@ TPP(3인칭)의 배틀그라운드 일반 스쿼드 전적을 보여드립니다
 
 FPP(1인칭)의 배틀그라운드 일반 스쿼드 전적을 보여드립니다
 
-!레식전적 (닉네임)
+!레식전적 (닉네임) (일시정지)
 
 레인보우식스 시즈의 랭크 정보와 레벨, 티어등을 보여드립니다
 
-!레식오퍼 (닉네임)
+!레식오퍼 (닉네임) (일시정지)
 
 레인보우식스 시즈의 오퍼레이터 정보(킬 ,데스,승률,가장 많이 플레이한 오퍼 순위)를 보여드립니다
 
@@ -69,5 +69,5 @@ FPP(1인칭)의 배틀그라운드 일반 스쿼드 전적을 보여드립니다
 
 ***
 
-Thanks for [J-hoplin1](https://jhoplin7259.tistory.com/) and [Goblin Slayer](https://blue-coding.tistory.com), [XxPKBxX](https://github.com/XxPKBxX)
+Thanks to [J-hoplin1](https://jhoplin7259.tistory.com/) and [Goblin Slayer](https://blue-coding.tistory.com), [XxPKBxX](https://github.com/XxPKBxX)
 
