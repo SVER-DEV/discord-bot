@@ -29,7 +29,7 @@ green = discord.Color.green()
 yellow = discord.Color.gold()
 blue = discord.Color.blue()
 
-token = 'NzIxOTg5MjM0NDk1MzI0MjUw.Xuci3w.4A_mB9rlH_67wdRlOKKtMJtqp0Y'
+token = 'your-token'
 
 # for lolplayersearch
 tierScore = {
