@@ -29,27 +29,7 @@ green = discord.Color.green()
 yellow = discord.Color.gold()
 blue = discord.Color.blue()
 
-# Scrape Rainbow Six Siege's Operator's icon before start
-unisoftURL = "https://www.ubisoft.com"
-rainbowSixSiegeOperatorIconURL = "https://www.ubisoft.com/en-gb/game/rainbow-six/siege/game-info/operators"
-html = requests.get(rainbowSixSiegeOperatorIconURL).text
-bs = BeautifulSoup(html,'html.parser')
-
-#Get oprators' pages with ccid
-operatorListDiv = bs.findAll('div',{'ccid' : re.compile('[0-9A-Za-z]*')})
-print("Initiating Rainbow Six Siege Operators' Information....")
-for ind in tqdm(range(0,len(operatorListDiv))):
-    operatormainURL = operatorListDiv[ind].a['href']
-    #Get Operator's name
-    operatorname = operatormainURL.split('/')[-1]
-    #Open URL : each operator's pages
-    html2 = requests.get(unisoftURL + operatormainURL).text
-    bs2 = BeautifulSoup(html2, 'html.parser')
-    operatoriconURL = bs2.find('div',{'class' : "operator__header__icons__names"}).img['src']
-    operatoriconURLDict[operatorname] = operatoriconURL
-
-
-token = 'your-token'
+token = 'NzIxOTg5MjM0NDk1MzI0MjUw.Xuci3w.4A_mB9rlH_67wdRlOKKtMJtqp0Y'
 
 # for lolplayersearch
 tierScore = {
@@ -166,49 +146,6 @@ async def on_message(message): # on_message() event : when the bot has recieved 
                                            description=f"현재 WH3N_BOT 은 ``{int(client.latency * 1000)}ms``의 지연시간을 가지고 있습니다.\n저와 {message.author.display_name}님이 닿기까지는 ``{ping}ms``가 걸렸습니다.",
                                            color=blue, timestamp=datetime.datetime.utcnow()))
 
-    if message.content.startswith("!마스크판매"):
-        if len(commandLine) < 1:
-            await message.channel.send(
-                embed=discord.Embed(title="사용법", description="```*마스크판매 (주소)```\n'서울특별시'와 같이 시 단위만 입력하는 것은 불가능합니다.",
-                                    color=blue, timestamp=datetime.datetime.utcnow()))
-        else:
-            if len(commandLine) == 1:
-                await message.channel.send(content=":no_entry: '서울특별시'와 같이 시 단위만 입력하는 것은 불가능합니다.")
-                return
-            addr = " ".join(commandLine)
-
-            try:
-                req = requests.get(
-                    f"https://8oi9s0nnth.apigw.ntruss.com/corona19-masks/v1/storesByAddr/json?address={addr}")
-            except Exception as error:
-                await catchError(message, error)
-            else:
-                if req.status_code != 200:
-                    await catchError(message, "상태 코드 오류")
-                else:
-                    res = req.json()
-                    count = res["count"]
-                    if count < 1:
-                        await message.channel.send(content=":no_entry: 주소가 잘못되었습니다.")
-                        return
-                    embed = discord.Embed(title="공적 마스크 판매 현황",
-                                          description=f"``{addr}``에 있는 마스크를 100개 이상 보유 중인 약국들의 마스크 판매 현황을 불러왔습니다.",
-                                          color=blue, timestamp=datetime.datetime.utcnow())
-                    number = 0
-                    for s in res["stores"]:
-                        if "remain_stat" in s:
-                            remain = s["remain_stat"]
-                            if remain == "plenty":
-                                embed.add_field(name=s["name"], value=s["addr"])
-                                number += 1
-                    if number > 25:
-                        embed.set_footer(text="25개 초과의 결과는 25개까지만 보여줍니다.")
-                    elif number < 1:
-                        embed = discord.Embed(title="찾을 수 없음",
-                                              description=f"``{addr}``에 있는 마스크를 100개 이상 보유 중인 약국들을 찾을 수 없습니다.",
-                                              color=red, timestamp=datetime.datetime.utcnow())
-                    await message.channel.send(embed=embed)
-
     if message.content.startswith("!도움말"):
         channel = message.channel
         embed = discord.Embed(
@@ -238,11 +175,11 @@ async def on_message(message): # on_message() event : when the bot has recieved 
         embed.add_field(name='!배그듀오2 (닉네임)', value='FPP(1인칭)의 배틀그라운드 일반 듀오 전적을 보여드립니다', inline=False)
         embed.add_field(name='!배그스쿼드1 (닉네임)', value='TPP(3인칭)의 배틀그라운드 일반 스쿼드 전적을 보여드립니다', inline=False)
         embed.add_field(name='!배그스쿼드2 (닉네임)', value='FPP(1인칭)의 배틀그라운드 일반 스쿼드 전적을 보여드립니다', inline=False)
-        embed.add_field(name='!레식전적 (닉네임)', value='레인보우식스 시즈의 랭크 정보와 레벨, 티어등을 보여드립니다', inline=False)
-        embed.add_field(name='!레식오퍼 (닉네임)', value='레인보우식스 시즈의 오퍼레이터 정보(킬 ,데스,승률,가장 많이 플레이한 오퍼 순위)를 보여드립니다', inline=False)
+        #embed.add_field(name='!레식전적 (닉네임)', value='레인보우식스 시즈의 랭크 정보와 레벨, 티어등을 보여드립니다', inline=False)
+        #embed.add_field(name='!레식오퍼 (닉네임)', value='레인보우식스 시즈의 오퍼레이터 정보(킬 ,데스,승률,가장 많이 플레이한 오퍼 순위)를 보여드립니다', inline=False)
         embed.add_field(name='!롤전적 (닉네임)', value='롤의 플레이어 정보(전적)을 보여드립니다', inline=False)
         embed.add_field(name='!핑', value='봇의 핑 정보를 보여드립니다.', inline=False)
-        embed.add_field(name='!마스크판매 (지역명)', value='마스크를 100개 이상 보유중인 약국들의 마스크 판매 현황을 보여드립니다.', inline=False)
+        #embed.add_field(name='!마스크판매 (지역명)', value='마스크를 100개 이상 보유중인 약국들의 마스크 판매 현황을 보여드립니다.', inline=False)
 
         await message.channel.send(embed=embed)
 
@@ -253,7 +190,7 @@ async def on_message(message): # on_message() event : when the bot has recieved 
         channel = message.channel
         embed = discord.Embed(
             title = '도움말',
-            description = '각각의 명령어들 입니다. 본 명령어를 치시면 항상 보실수 있어요 :ㅇ  (닉네임에 뛰어쓰기가 있으시다면 -로 구분하시면 됩니다!)',
+            description = '각각의 명령어들 입니다. 본 명령어를 치시면 항상 보실수 있어요     :ㅇ  (닉네임에 뛰어쓰기가 있으시다면 -로 구분하시면 됩니다!)',
             colour = discord.Colour.blue()
         )
 
@@ -278,10 +215,10 @@ async def on_message(message): # on_message() event : when the bot has recieved 
         embed.add_field(name='!배그듀오2 (닉네임)', value='FPP(1인칭)의 배틀그라운드 일반 듀오 전적을 보여드립니다', inline=False)
         embed.add_field(name='!배그스쿼드1 (닉네임)', value='TPP(3인칭)의 배틀그라운드 일반 스쿼드 전적을 보여드립니다', inline=False)
         embed.add_field(name='!배그스쿼드2 (닉네임)', value='FPP(1인칭)의 배틀그라운드 일반 스쿼드 전적을 보여드립니다', inline=False)
-        embed.add_field(name='!레식전적 (닉네임)', value='레인보우식스 시즈의 랭크 정보와 레벨, 티어등을 보여드립니다', inline=False)
-        embed.add_field(name='!레식오퍼 (닉네임)', value='레인보우식스 시즈의 오퍼레이터 정보(킬 ,데스,승률,가장 많이 플레이한 오퍼 순위)를 보여드립니다', inline=False)
+        #embed.add_field(name='!레식전적 (닉네임)', value='레인보우식스 시즈의 랭크 정보와 레벨, 티어등을 보여드립니다', inline=False)
+        #embed.add_field(name='!레식오퍼 (닉네임)', value='레인보우식스 시즈의 오퍼레이터 정보(킬 ,데스,승률,가장 많이 플레이한 오퍼 순위)를 보여드립니다', inline=False)
         embed.add_field(name='!롤전적 (닉네임)', value='롤의 플레이어 정보(전적)을 보여드립니다', inline=False)
-        embed.add_field(name='!마스크판매 (지역명)', value='마스크를 100개 이상 보유중인 약국들의 마스크 판매 현황을 보여드립니다.', inline=False)
+        #embed.add_field(name='!마스크판매 (지역명)', value='마스크를 100개 이상 보유중인 약국들의 마스크 판매 현황을 보여드립니다.', inline=False)
         
         await message.channel.send(embed=embed)
 
@@ -1277,332 +1214,4 @@ async def on_message(message): # on_message() event : when the bot has recieved 
             embed.add_field(name="해당 닉네임의 소환사가 존재하지 않습니다.", value="소환사 이름을 확인해주세요", inline=False)
             embed.set_footer(text='Service provided by WH3N_GG#7758.')
             await message.channel.send("Error : Non existing Summoner ", embed=embed)
-
-    if message.content.startswith("!레식전적"):
-
-        # Get player nickname and parse page
-        playerNickname = ''.join((message.content).split(' ')[1:])
-        html = requests.get(playerSite + playerNickname + '/pc/').text
-        bs = BeautifulSoup(html, 'html.parser')
-
-        # 한번에 검색 안되는 경우에는 해당 반환 리스트의 길이 존재. -> bs.find('div',{'class' : 'results'}
-
-        if bs.find('div', {'class': 'results'}) == None:
-            # Get latest season's Rank information
-            latestSeason = bs.find('div', {'class': re.compile('season\-rank operation\_[A-Za-z_]*')})
-
-            # if player nickname not entered
-            if len(message.content.split(" ")) == 1:
-                embed = discord.Embed(title="플레이어 이름이 입력되지 않았습니다", description="", color=0x5CD1E5)
-                embed.add_field(name="Error : Player name not entered" + playerNickname,
-                                value="To use command : !레식전적 (nickname)")
-                embed.set_footer(text='Service provided by WH3N_GG#7758.')
-                await message.channel.send("Error : Player name not entered ", embed=embed)
-
-            # search if it's empty page
-            elif latestSeason == None:
-                embed = discord.Embed(title="해당 이름을 가진 플레이어가 존재하지않습니다.", description="", color=0x5CD1E5)
-                embed.add_field(name="Error : Can't find player name " + playerNickname,
-                                value="Please check player's nickname")
-                embed.set_footer(text='Service provided by WH3N_GG#7758.')
-                await message.channel.send("Error : Can't find player name " + playerNickname, embed=embed)
-
-            # Command entered well
-            else:
-                # r6stats profile image
-                r6Profile = bs.find('div', {'class': 'main-logo'}).img['src']
-
-                # player level
-                playerLevel = bs.find('span', {'class': 'quick-info__value'}).text.strip()
-
-                RankStats = bs.find('div', {'class': 'card stat-card block__ranked horizontal'}).findAll('span', {
-                    'class': 'stat-count'})
-                # Get text from <span> values
-                for info in range(len(RankStats)):
-                    RankStats[info] = RankStats[info].text.strip()
-                # value of variable RankStats : [Timeplayed, Match Played,kills per matchm, kills,death, KDA Rate,Wins,Losses,W/L Rate]
-
-                # latest season tier medal
-                lastestSeasonRankMedalLocation = latestSeason.div.img['src']
-                # latest Season tier
-                lastestSeasonRankTier = latestSeason.div.img['alt']
-                # latest season operation name
-                OperationName = latestSeason.find('div', {'class': 'meta-wrapper'}).find('div', {
-                    'class': 'operation-title'}).text.strip()
-                # latest season Ranking
-                latestSeasonRanking = latestSeason.find('div', {'class': 'rankings-wrapper'}).find('span', {
-                    'class': 'ranking'})
-
-                # if player not ranked, span has class not ranked if ranked span get class ranking
-                if latestSeasonRanking == None:
-                    latestSeasonRanking = bs.find('span', {'class': 'not-ranked'}).text.upper()
-                else:
-                    latestSeasonRanking = latestSeasonRanking.text
-
-                # Add player's MMR Rank MMR Information
-                playerInfoMenus = bs.find('a', {'class': 'player-tabs__season_stats'})['href']
-                mmrMenu = r6URL + playerInfoMenus
-                html = requests.get(mmrMenu).text
-                bs = BeautifulSoup(html, 'html.parser')
-
-                # recent season rank box
-                # Rank show in purpose : America - Europe - Asia. This code only support Asia server's MMR
-                getElements = bs.find('div', {'class': 'card__content'})  # first elements with class 'card__contet is latest season content box
-
-                for ckAsia in getElements.findAll('div', {'class': 'season-stat--region'}):
-                    checkRegion = ckAsia.find('div',{'class' : 'season-stat--region-title'}).text
-                    if checkRegion == "Asia":
-                        getElements = ckAsia
-                        break
-                    else:
-                        pass
-
-                # Player's Tier Information
-                latestSeasonTier = getElements.find('img')['alt']
-                # MMR Datas Info -> [Win,Losses,Abandon,Max,W/L,MMR]
-                mmrDatas = []
-                for dt in getElements.findAll('span', {'class': 'season-stat--region-stats__stat'}):
-                    mmrDatas.append(dt.text)
-
-                embed = discord.Embed(title="Rainbow Six Siege 플레이어 검색 결과 | r6stats", description="",
-                                      color=0x5CD1E5)
-                embed.add_field(name="Rainbow Six Siege 플레이어 검색 결과 | r6stats", value=playerSite + playerNickname + '/pc/',
-                                inline=False)
-                embed.add_field(name="플레이어 티어/레벨",
-                                value="Ranking : #" + latestSeasonRanking + " | " + "Level : " + playerLevel,
-                                inline=False)
-                embed.add_field(name="전시즌 정보 | 시즌 : " + OperationName,
-                                value=
-                                "Tier(Asia) : " + latestSeasonTier + " | W/L : " + mmrDatas[0] + "/" + mmrDatas[
-                                    1] + " | " + "MMR(Asia) : " + mmrDatas[-1],
-                                inline=False)
-
-                embed.add_field(name="플레이 시간", value=RankStats[0], inline=True)
-                embed.add_field(name="매치수", value=RankStats[1], inline=True)
-                embed.add_field(name="경기당 처치", value=RankStats[2], inline=True)
-                embed.add_field(name="총 처치", value=RankStats[3], inline=True)
-                embed.add_field(name="총 사망", value=RankStats[4], inline=True)
-                embed.add_field(name="KDA", value=RankStats[5], inline=True)
-                embed.add_field(name="승리", value=RankStats[6], inline=True)
-                embed.add_field(name="패배", value=RankStats[7], inline=True)
-                embed.add_field(name="승률", value=RankStats[8], inline=True)
-                embed.set_thumbnail(url=r6URL + r6Profile)
-                embed.set_footer(text='Service provided by WH3N_GG#7758.')
-                await message.channel.send("Player " + playerNickname + "'s stats search", embed=embed)
-        else:
-            searchLink = bs.find('a', {'class': 'result'})
-            if searchLink == None:
-                embed = discord.Embed(title="해당 이름을 가진 플레이어가 존재하지않습니다.", description="", color=0x5CD1E5)
-                embed.add_field(name="Error : Can't find player name " + playerNickname,
-                                value="Please check player's nickname")
-                embed.set_footer(text='Service provided by WH3N_GG#7758.')
-                await message.channel.send("Error : Can't find player name " + playerNickname, embed=embed)
-            else:
-                searchLink = r6URL + searchLink['href']
-                html = requests.get(searchLink).text
-                bs = BeautifulSoup(html, 'html.parser')
-                # Get latest season's Rank information
-                latestSeason = bs.findAll('div', {'class': re.compile('season\-rank operation\_[A-Za-z_]*')})[0]
-
-                # if player nickname not entered
-                if len(message.content.split(" ")) == 1:
-                    embed = discord.Embed(title="플레이어 이름이 입력되지 않았습니다", description="", color=0x5CD1E5)
-                    embed.add_field(name="Error : Player name not entered" + playerNickname,
-                                    value="To use command : !레식전적 (nickname)")
-                    embed.set_footer(text='Service provided by WH3N_GG#7758.')
-                    await message.channel.send("Error : Player name not entered ", embed=embed)
-
-                # search if it's empty page
-                elif latestSeason == None:
-                    embed = discord.Embed(title="해당 이름을 가진 플레이어가 존재하지않습니다.", description="", color=0x5CD1E5)
-                    embed.add_field(name="Error : Can't find player name " + playerNickname,
-                                    value="Please check player's nickname")
-                    embed.set_footer(text='Service provided by WH3N_GG#7758.')
-                    await message.channel.send("Error : Can't find player name " + playerNickname, embed=embed)
-
-                # Command entered well
-                else:
-
-                    # r6stats profile image
-                    r6Profile = bs.find('div', {'class': 'main-logo'}).img['src']
-
-                    # player level
-                    playerLevel = bs.find('span', {'class': 'quick-info__value'}).text.strip()
-
-                    RankStats = bs.find('div', {'class': 'card stat-card block__ranked horizontal'}).findAll('span', {
-                        'class': 'stat-count'})
-                    # Get text from <span> values
-                    for info in range(len(RankStats)):
-                        RankStats[info] = RankStats[info].text.strip()
-                    # value of variable RankStats : [Timeplayed, Match Played,kills per matchm, kills,death, KDA Rate,Wins,Losses,W/L Rate]
-
-                    # latest season tier medal
-                    lastestSeasonRankMedalLocation = latestSeason.div.img['src']
-                    # latest Season tier
-                    lastestSeasonRankTier = latestSeason.div.img['alt']
-                    # latest season operation name
-                    OperationName = latestSeason.find('div', {'class': 'meta-wrapper'}).find('div', {
-                        'class': 'operation-title'}).text.strip()
-                    # latest season Ranking
-                    latestSeasonRanking = latestSeason.find('div', {'class': 'rankings-wrapper'}).find('span', {
-                        'class': 'ranking'})
-
-                    # if player not ranked, span has class not ranked if ranked span get class ranking
-                    if latestSeasonRanking == None:
-                        latestSeasonRanking = bs.find('span', {'class': 'not-ranked'}).text.upper()
-                    else:
-                        latestSeasonRanking = latestSeasonRanking.text
-
-                    #Add player's MMR Rank MMR Information
-                    playerInfoMenus = bs.find('a', {'class' : 'player-tabs__season_stats'})['href']
-                    mmrMenu = r6URL + playerInfoMenus
-                    html = requests.get(mmrMenu).text
-                    bs = BeautifulSoup(html, 'html.parser')
-
-                    #recent season rank box
-                    # Rank show in purpose : America - Europe - Asia. This code only support Asia server's MMR
-                    getElements = bs.find('div', {'class': 'card__content'})  # first elements with class 'card__contet is latest season content box
-
-                    for ckAsia in getElements.findAll('div', {'class': 'season-stat--region'}):
-                        checkRegion = ckAsia.find('div', {'class': 'season-stat--region-title'}).text
-                        if checkRegion == "Asia":
-                            getElements = ckAsia
-                            break
-                        else:
-                            pass
-                    # Player's Tier Information
-                    latestSeasonTier = getElements.find('img')['alt']
-                    # MMR Datas Info -> [Win,Losses,Abandon,Max,W/L,MMR]
-                    mmrDatas = []
-                    for dt in getElements.findAll('span', {'class': 'season-stat--region-stats__stat'}):
-                        mmrDatas.append(dt.text)
-
-                    embed = discord.Embed(title="레인보우식스 시즈 플레이어 정보", description="",
-                                          color=0x5CD1E5)
-                    embed.add_field(name="레인보우식스 시즈 플레이어 정보", value=searchLink,
-                                    inline=False)
-                    embed.add_field(name="Player's basic information",value= "Ranking : #" + latestSeasonRanking + " | " + "Level : " + playerLevel,inline=False)
-                    embed.add_field(name="Latest season information | Operation : " + OperationName,
-                                    value=
-                                    "Tier(Asia) : " + latestSeasonTier + " | W/L : " + mmrDatas[0] + "/"+mmrDatas[1] + " | " + "MMR(Asia) : " + mmrDatas[-1],
-                                    inline=False)
-
-                    embed.add_field(name="총 플레이 시간", value=RankStats[0], inline=True)
-                    embed.add_field(name="매치수", value=RankStats[1], inline=True)
-                    embed.add_field(name="경기당 처치", value=RankStats[2], inline=True)
-                    embed.add_field(name="총 처치", value=RankStats[3], inline=True)
-                    embed.add_field(name="총 사망", value=RankStats[4], inline=True)
-                    embed.add_field(name="KDA", value=RankStats[5], inline=True)
-                    embed.add_field(name="승리", value=RankStats[6], inline=True)
-                    embed.add_field(name="패배", value=RankStats[7], inline=True)
-                    embed.add_field(name="승률", value=RankStats[8], inline=True)
-                    embed.set_thumbnail(url=r6URL + r6Profile)
-                    embed.set_footer(text='Service provided by WH3N_GG#7758.')
-                    await message.channel.send("Player " + playerNickname + "'s stats search", embed=embed)
-
-    if message.content.startswith ("!레식오퍼"):
-        # operator image dictionary key is lowercase
-
-        # for player's operator Informaiton
-        useroperatorInformation = dict()
-
-        playerNickname = ''.join((message.content).split(' ')[1:])
-        html = requests.get(playerSite + playerNickname + '/pc/').text
-        bs = BeautifulSoup(html, 'html.parser')
-
-        if bs.find('div', {'class': 'results'}) == None:
-            # Scrape menu hyperlink : to operator menu
-            playerOperator = bs.find('a', {'class': 'player-tabs__operators'})
-            playerOperatorMenu = r6URL + playerOperator['href']
-            print(playerOperatorMenu)
-            # Reopen page
-            html = requests.get(playerOperatorMenu).text
-            bs = BeautifulSoup(html, 'html.parser')
-
-            embed = discord.Embed(title="Stats by operator", description="높은 시간 플레이한 오퍼레이터 순서",
-                                  color=0x5CD1E5)
-
-            embed.add_field(name="더 많은 정보를 보시려면 여길 클릭해주세요", value=playerOperatorMenu,
-                            inline=False)
-
-            operatorStats = bs.findAll('tr', {'class': 'operator'})
-
-            mostOperator = None
-
-            indNumS = 0
-            # statlist -> [operator,kills,deaths,K/D,Wins,Losses,W/L,HeadShots,Melee Kills,DBNO,Playtime]
-            for op in operatorStats:
-                # discord can show maximum 8 fields
-                if indNumS == 7:
-                    break
-                count = 0
-                statlist = []
-                if op.td.span.text.split(" ")[-1] == "Recruit":
-                    pass
-                else:
-                    for b in op:
-                        statlist.append(b.text)
-                    if indNumS == 0:
-                        mostOperator = convertToNormalEnglish(statlist[0].lower())
-                    embed.add_field(name="오퍼레이터 이름", value=statlist[0], inline=True)
-                    embed.add_field(name="킬/데스", value=statlist[1] + "K / " + statlist[2] + "D", inline=True)
-                    embed.add_field(name="승/패", value=statlist[4] + "W / " + statlist[5] + "L", inline=True)
-                    indNumS += 1
-            embed.set_thumbnail(url=operatoriconURLDict[mostOperator])
-            embed.set_footer(text='Service provided by WH3N_GG#7758.')
-            await message.channel.send("Player " + playerNickname + "'s stats search", embed=embed)
-        else:
-            searchLink = bs.find('a', {'class': 'result'})
-            if searchLink == None:
-                embed = discord.Embed(title="해당 이름을 가진 플레이어가 존재하지않습니다.", description="", color=0x5CD1E5)
-                embed.add_field(name="Error : Can't find player name " + playerNickname,
-                                value="Please check player's nickname")
-                embed.set_footer(text='Service provided by WH3N_GG.')
-                await message.channel.send("Error : Can't find player name " + playerNickname, embed=embed)
-            else:
-                searchLink = bs.find('a', {'class': 'result'})['href']
-                searchLink = r6URL + searchLink
-                html = requests.get(searchLink).text
-                bs = BeautifulSoup(html, 'html.parser')
-                # Scrape menu hyperlink : to operator menu
-                playerOperator = bs.find('a', {'class': 'player-tabs__operators'})
-                playerOperatorMenu = r6URL + playerOperator['href']
-                print(playerOperatorMenu)
-                # Reopen page
-                html = requests.get(playerOperatorMenu).text
-                bs = BeautifulSoup(html, 'html.parser')
-
-                embed = discord.Embed(title="오퍼 픽률", description="가장 많이 플레이한 오퍼 순서",
-                                      color=0x5CD1E5)
-                embed.add_field(name="더 많은 정보를 보시려면 여길 클릭해주세요", value=playerOperatorMenu,
-                                inline=False)
-
-                operatorStats = bs.findAll('tr', {'class': 'operator'})
-
-                mostOperator = None
-
-                indNumS = 0
-                # statlist -> [operator,kills,deaths,K/D,Wins,Losses,W/L,HeadShots,Melee Kills,DBNO,Playtime]
-                for op in operatorStats:
-                    # discord can show maximum 8 fields
-                    if indNumS == 7:
-                        break
-                    count = 0
-                    statlist = []
-                    if op.td.span.text.split(" ")[-1] == "Recruit":
-                        pass
-                    else:
-                        for b in op:
-                            statlist.append(b.text)
-                        if indNumS == 0:
-                            mostOperator = convertToNormalEnglish(statlist[0].lower())
-                        embed.add_field(name="오퍼레이터 이름", value=statlist[0], inline=True)
-                        embed.add_field(name="킬/데스", value=statlist[1] + "K / " + statlist[2] + "D",
-                                        inline=True)
-                        embed.add_field(name="승리/패배", value=statlist[4] + "W / " + statlist[5] + "L",
-                                        inline=True)
-                        indNumS += 1
-                embed.set_thumbnail(url=operatoriconURLDict[mostOperator])
-                embed.set_footer(text='Service provided by WH3N_GG#7758.')
-                await message.channel.send("Player " + playerNickname + "'s stats search", embed=embed)
 client.run(token)
